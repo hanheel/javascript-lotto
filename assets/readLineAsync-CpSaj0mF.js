@@ -1,0 +1,1 @@
+const o={};function i(e){return new Promise((r,t)=>{arguments.length!==1&&t(new Error("arguments must be 1")),typeof e!="string"&&t(new Error("query must be string"));const n=o.createInterface({input:process.stdin,output:process.stdout});n.question(e,s=>{n.close(),r(s)})})}export{i as readLineAsync};

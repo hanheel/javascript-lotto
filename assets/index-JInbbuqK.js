@@ -566,7 +566,7 @@ const retryHandler = () => {
   if (originalApp2) {
     currentApp.replaceChildren(...originalApp2.children);
   }
-  runLotto();
+  initialHandler();
 };
 const Result = ({ matchingCount, profitRate }) => {
   const resultContainer = document.createElement("div");

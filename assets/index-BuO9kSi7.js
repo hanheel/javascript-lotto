@@ -481,6 +481,7 @@ const BonusInput = () => {
   bonusInputWrap.appendChild(LottoNumberInput({ name: "bonus-number" }));
   return bonusInputWrap;
 };
+const basePath = window.location.pathname.split("/")[1];
 const LottoNumbers = ({ lottoArray }) => {
   const fragment = document.createDocumentFragment();
   lottoArray.forEach((lotto) => {
@@ -496,7 +497,7 @@ const LottoNumber = ({ lotto }) => {
   lottoItem.textContent = lotto.numbers.join(", ");
   const lottoImage = document.createElement("img");
   lottoImage.classList.add("lotto-image");
-  lottoImage.src = "/lotto.png";
+  lottoImage.src = `/${basePath}/lotto.png`;
   lottoImage.alt = "로또 이미지";
   lottoNumbersItem.appendChild(lottoImage);
   lottoNumbersItem.appendChild(lottoItem);
@@ -588,7 +589,7 @@ const ExitIcon = () => {
   const exitIconContainer = document.createElement("div");
   exitIconContainer.classList.add("exit-icon-container");
   const exitIcon = document.createElement("img");
-  exitIcon.src = "/close.png";
+  exitIcon.src = `/${basePath}/close.png`;
   exitIcon.classList.add("exit-icon");
   exitIconContainer.appendChild(exitIcon);
   exitIconContainer.addEventListener("click", () => {

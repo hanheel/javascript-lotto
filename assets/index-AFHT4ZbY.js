@@ -60,10 +60,6 @@ const addKeyListener = (selector, callback, key) => {
     });
   });
 };
-const disabledButton = (name) => {
-  const button = document.querySelector(`[name=${name}]`);
-  button.disabled = true;
-};
 const LOTTO_NUMBERS = {
   LENGTH: 6,
   BONUS_LENGTH: 1,
@@ -383,7 +379,7 @@ const Alert = ({ message }) => {
   alert.textContent = message;
   return alert;
 };
-const displayComponent = (parentElement, ...childElement) => {
+const appendToParent = (parentElement, ...childElement) => {
   childElement.forEach((element) => document.querySelector(`${parentElement}`).appendChild(element));
 };
 const retryOnErrorForTerminal = async (asyncFn, onError) => {
@@ -401,7 +397,7 @@ const retryOnErrorWeb = async (asyncFn) => {
   } catch (error) {
     const alert = document.querySelector(".alert");
     if (!alert) {
-      displayComponent(".alert-container", Alert({ message: error.message }));
+      appendToParent(".alert-container", Alert({ message: error.message }));
       setTimeout(() => {
         document.querySelector(".alert").remove();
       }, 1500);
@@ -481,7 +477,6 @@ const BonusInput = () => {
   bonusInputWrap.appendChild(LottoNumberInput({ name: "bonus-number" }));
   return bonusInputWrap;
 };
-const basePath = window.location.pathname.split("/")[1];
 const LottoNumbers = ({ lottoArray }) => {
   const fragment = document.createDocumentFragment();
   lottoArray.forEach((lotto) => {
@@ -497,7 +492,7 @@ const LottoNumber = ({ lotto }) => {
   lottoItem.textContent = lotto.numbers.join(", ");
   const lottoImage = document.createElement("img");
   lottoImage.classList.add("lotto-image");
-  lottoImage.src = `/${basePath}/lotto.png`;
+  lottoImage.src = `./lotto.png`;
   lottoImage.alt = "로또 이미지";
   lottoNumbersItem.appendChild(lottoImage);
   lottoNumbersItem.appendChild(lottoItem);
@@ -589,7 +584,7 @@ const ExitIcon = () => {
   const exitIconContainer = document.createElement("div");
   exitIconContainer.classList.add("exit-icon-container");
   const exitIcon = document.createElement("img");
-  exitIcon.src = `/${basePath}/close.png`;
+  exitIcon.src = `./close.png`;
   exitIcon.classList.add("exit-icon");
   exitIconContainer.appendChild(exitIcon);
   exitIconContainer.addEventListener("click", () => {
@@ -726,16 +721,16 @@ const resultHandler = async (lottoCount, lottoArray) => {
 };
 const WebOutputView = {
   renderLottoFlow(lottoCount, lottoArray) {
-    displayComponent(".purchase-container", Prompt({ message: SYSTEM_MESSAGE.CANNOT_RETRY, style: "warning" }));
+    appendToParent(".purchase-container", Prompt({ message: SYSTEM_MESSAGE.CANNOT_RETRY, style: "warning" }));
     const countPrompt = `총 ${lottoCount}개를 구매했습니다.`;
-    displayComponent(".count-prompt", Prompt({ message: countPrompt }));
-    displayComponent(".lotto-numbers-container", LottoNumbers({ lottoArray }));
+    appendToParent(".count-prompt", Prompt({ message: countPrompt }));
+    appendToParent(".lotto-numbers-container", LottoNumbers({ lottoArray }));
     const winningPrompt = `지난 주 당첨번호 ${LOTTO_NUMBERS.LENGTH}개와 보너스 번호 ${LOTTO_NUMBERS.BONUS_LENGTH}개를 입력해주세요.
   로또 번호는 1에서 45까지 입력할 수 있습니다.`;
-    displayComponent(".winning-prompt", Prompt({ message: winningPrompt }));
-    displayComponent(".winning-bonus-container", WinningInput(), BonusInput());
-    const resultButtonProps = { label: "결과 확인하기", onClick: () => showResult(lottoCount, lottoArray), style: "large", name: "result" };
-    displayComponent(".result-button-container", Button(resultButtonProps));
+    appendToParent(".winning-prompt", Prompt({ message: winningPrompt }));
+    appendToParent(".winning-bonus-container", WinningInput(), BonusInput());
+    const resultButtonProps = { label: "결과 확인하기", onClick: () => resultHandler(lottoCount, lottoArray), style: "large", name: "result" };
+    appendToParent(".result-button-container", Button(resultButtonProps));
     addKeyListener(
       "[name=winning-number], [name=bonus-number]",
       () => {
@@ -746,13 +741,18 @@ const WebOutputView = {
   },
   renderResult(matchingCount, profitRate) {
     const modalContent = Result({ matchingCount, profitRate });
-    displayComponent("#app", Modal({ content: modalContent }));
+    appendToParent("#app", Modal({ content: modalContent }));
   }
+};
+const disableElement = (name) => {
+  const element = document.querySelector(`[name=${name}]`);
+  element.disabled = true;
 };
 const purchaseLotto = async () => {
   const { lottoArray, lottoCount } = await PurchaseController();
   WebOutputView.renderLottoFlow(lottoCount, lottoArray);
-  disabledButton("purchase");
+  disableElement("purchase");
+  disableElement("price");
 };
 const initialHandler = () => {
   const originalApp2 = document.querySelector("#app");

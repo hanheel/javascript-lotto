@@ -116,7 +116,6 @@ const setInputCss = (style) => {
 };
 const LottoNumberInput = ({ name, style = "small", placeholder = "" }) => {
   const lottoNumberInput = document.createElement("input");
-  console.log(`작동 : ${setInputCss(style)}`);
   lottoNumberInput.classList.add(setInputCss(style));
   lottoNumberInput.min = LOTTO_NUMBERS.MIN;
   lottoNumberInput.max = LOTTO_NUMBERS.MAX;
@@ -660,6 +659,7 @@ const updateResultButtonUI = () => {
     ResultController();
   };
   const resultButtonProps = { label: "결과 확인하기", onClick: resultClickHandler, style: "large", name: "result" };
+  addKeyListener("[name=winning-number],[name=bonus-number]", resultClickHandler, "Enter");
   appendElement(".result-button-container", Button(resultButtonProps));
 };
 const updateResultUI = () => {
